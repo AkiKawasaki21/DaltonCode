@@ -1,0 +1,247 @@
+/*
+ * Service index: workshop-manual rows. Hairlines, type and offset do the work.
+ * No cards, fills, shadows, glass or blur. Colour, type, easing and duration
+ * come from tokens.css; spacing is derived from --s-gutter and --s-section.
+ */
+
+.section {
+  --index-col: calc(var(--s-gutter) * 2);
+  --gap: calc(var(--s-gutter) * 0.75);
+
+  padding-inline: var(--s-gutter);
+  padding-top: calc(var(--s-section) * 0.5);
+  padding-bottom: var(--s-section);
+  font-family: var(--font-body);
+  color: var(--c-text);
+}
+
+/* One hairline above each row; one closing the list. */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+.item {
+  border-top: 1px solid var(--c-hairline);
+}
+
+/* The whole row is the hit target. Transparent, so no fill appears on hover. */
+.row {
+  display: grid;
+  grid-template-columns: var(--index-col) minmax(0, 1fr) auto;
+  column-gap: var(--gap);
+  align-items: baseline;
+  width: 100%;
+  margin: 0;
+  padding: calc(var(--s-gutter) * 1.2) 0 calc(var(--s-gutter) * 0.9);
+  text-align: left;
+}
+
+.index {
+  font-family: var(--font-archivo);
+  font-size: var(--t-small);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.14em;
+  color: var(--c-gold-dim);
+  transition: color var(--d-tap) var(--e-out);
+}
+
+.head {
+  display: grid;
+  row-gap: calc(var(--s-gutter) * 0.35);
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-archivo);
+  font-size: var(--t-lead);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+  text-wrap: balance;
+  transition: color var(--d-tap) var(--e-out);
+}
+
+.blurb {
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--c-text-soft);
+  text-wrap: pretty;
+}
+
+.chevron {
+  align-self: center;
+  width: 1em;
+  height: 1em;
+  font-size: var(--t-body);
+  color: var(--c-text-faint);
+  transition:
+    transform var(--d-fast) var(--e-out),
+    color var(--d-tap) var(--e-out);
+}
+
+.row:active .title {
+  color: var(--c-gold-hot);
+}
+
+@media (hover: hover) {
+  .row:hover .title {
+    color: var(--c-gold-hot);
+  }
+}
+
+/* Open row: index and chevron take gold. The title stays put. */
+.item[data-open='true'] .index {
+  color: var(--c-gold);
+}
+
+.item[data-open='true'] .chevron {
+  color: var(--c-gold);
+  transform: rotate(180deg);
+}
+
+/* Expansion animates grid-template-rows 0fr -> 1fr, so no height is measured. */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--d-fast) var(--e-out);
+}
+
+.item[data-open='true'] .panel {
+  grid-template-rows: 1fr;
+}
+
+/* min-height: 0 and overflow: hidden let the track collapse fully. Padding sits
+   on the list inside, so a closed panel leaves no sliver behind. */
+.panelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.services {
+  display: grid;
+  row-gap: calc(var(--s-gutter) * 0.3);
+  margin: 0;
+  padding: calc(var(--s-gutter) * 0.25) 0 calc(var(--s-gutter) * 1.2) calc(var(--index-col) + var(--gap));
+  list-style: none;
+}
+
+.services li {
+  position: relative;
+  padding-left: calc(var(--s-gutter) * 0.75);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  color: var(--c-text-soft);
+}
+
+/* A hairline tick, not a dot. Neutral, never gold. */
+.services li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.86em;
+  width: 0.5em;
+  height: 1px;
+  background: var(--c-text-faint);
+}
+
+/* Closing block. The statement runs flush left; the details sit in the title column. */
+.closing {
+  padding-top: calc(var(--s-section) * 0.6);
+}
+
+.lead {
+  max-width: 16em;
+  margin: 0;
+  font-family: var(--font-archivo);
+  font-size: var(--t-title);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--c-text);
+  text-wrap: balance;
+}
+
+.warranty {
+  color: var(--c-gold);
+}
+
+.meta {
+  display: grid;
+  margin: calc(var(--s-gutter) * 1.5) 0 0 calc(var(--index-col) + var(--gap));
+  padding: 0;
+}
+
+.metaRow {
+  display: grid;
+  row-gap: calc(var(--s-gutter) * 0.25);
+  margin: 0;
+  padding: calc(var(--s-gutter) * 0.8) 0;
+  border-top: 1px solid var(--c-hairline-s);
+}
+
+.metaRow dt {
+  font-family: var(--font-archivo);
+  font-size: var(--t-micro);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-text-soft);
+}
+
+.metaRow dd {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: var(--c-text);
+  overflow-wrap: anywhere;
+}
+
+.ig {
+  display: inline-block;
+  margin: calc(var(--s-gutter) * 1.2) 0 0 calc(var(--index-col) + var(--gap));
+  font-size: var(--t-body);
+  font-weight: 600;
+  color: var(--c-gold);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: color var(--d-tap) var(--e-out);
+}
+
+@media (hover: hover) {
+  .ig:hover {
+    color: var(--c-gold-hot);
+  }
+}
+
+/* Two columns from 761px up, the same split the rest of the site uses. */
+@media (min-width: 761px) {
+  .head {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    column-gap: var(--s-gutter);
+    align-items: baseline;
+  }
+
+  .metaRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    column-gap: var(--s-gutter);
+    align-items: baseline;
+  }
+}
+
+.tel {
+  color: var(--c-gold);
+  font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid var(--c-hairline);
+  padding-bottom: 1px;
+  transition: border-color var(--d-fast) var(--e-out);
+}
+.tel:hover { border-color: var(--c-gold); }
+
+/* Clear the fixed booking bar so the closing block is never underneath it. */
+.closing { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }

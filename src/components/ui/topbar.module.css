@@ -1,0 +1,42 @@
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-chrome);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(0.9rem, 2vw, 1.4rem) var(--s-gutter);
+  background: linear-gradient(to bottom, oklch(10% 0.008 70 / 0.72), transparent);
+  animation: fade-in var(--d-slow) var(--e-out) 400ms both;
+}
+
+.brand { display: flex; align-items: baseline; gap: 0.55ch; }
+.mark {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  font-size: var(--t-small);
+  letter-spacing: 0.22em;
+  color: var(--c-text);
+}
+.sub {
+  font-size: var(--t-pin);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+.phone {
+  font-size: var(--t-micro);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--c-text-soft);
+  border-bottom: 1px solid var(--c-hairline);
+  padding-bottom: 2px;
+  transition: color var(--d-fast) var(--e-out), border-color var(--d-fast) var(--e-out);
+}
+.phone:hover { color: var(--c-gold); border-color: var(--c-gold); }
+
+@media (max-width: 480px) { .phone { display: none; } }

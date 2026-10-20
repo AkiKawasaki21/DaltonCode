@@ -1,0 +1,193 @@
+/* Speedometer loader.
+   Layers, bottom to top: glow, dial (face, track, ticks), fill, needle, readout.
+   Per frame only transform (needle) and opacity (fill slices, glow) change;
+   ticks and numerals only ever transition opacity. Reduced motion needs no
+   rule of its own here: tokens.css collapses every --d-* duration. */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--c-void);
+  color: var(--c-text);
+}
+
+/* Cabin-dark vignette: the centre lifts a touch so the dial sits in light. */
+.loader::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 58% at 50% 46%, var(--c-bg), transparent);
+  pointer-events: none;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 4.5vh, 2.75rem);
+  padding: var(--s-gutter);
+}
+
+/* Height comes from an inline aspect-ratio so it can never drift from the
+   viewBox the three SVG layers share. */
+.gauge {
+  --gauge: min(88vw, 64vh, 38rem);
+  position: relative;
+  width: var(--gauge);
+}
+
+/* Warm halo behind the dial; its opacity rides the sweep. `top` is set inline
+   so it stays centred on the hub. */
+.glow {
+  position: absolute;
+  left: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--c-gold) 24%, transparent),
+    color-mix(in oklab, var(--c-gold) 6%, transparent) 55%,
+    transparent
+  );
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Own compositor layer: the rotation never repaints the dial. */
+.needle { will-change: transform; }
+
+/* ── Dial ─────────────────────────────────────────────────────────────── */
+
+/* Gradient stops carry their colour through classes so every colour in the
+   SVG still comes from a token. Fading to the same hue at zero opacity (not to
+   `transparent`) keeps SVG gradients from greying out through the middle. */
+.stopFaceCore { stop-color: var(--c-raised); stop-opacity: 0.85; }
+.stopFaceEdge { stop-color: var(--c-raised); stop-opacity: 0; }
+
+.track { stroke: var(--c-hairline); }
+
+.tick {
+  stroke: var(--c-text-soft);
+  stroke-width: 1.4px;
+  opacity: 0.2;
+  transition: opacity var(--d-fast) var(--e-out);
+}
+.tickMajor { stroke-width: 2.4px; }
+
+.numeral {
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  text-anchor: middle;
+  fill: var(--c-text-soft);
+  opacity: 0.28;
+  transition: opacity var(--d-fast) var(--e-out);
+}
+
+/* Ticks and numerals brighten as the needle passes them. */
+.lit { opacity: 1; }
+
+/* ── Fill ─────────────────────────────────────────────────────────────── */
+
+/* One gradient across the whole arc, left to right: dim gold at the start of
+   the sweep, gold through the crown, hot gold where it lands. */
+.stopEmber { stop-color: var(--c-gold-dim); }
+.stopGold  { stop-color: var(--c-gold); }
+.stopHot   { stop-color: var(--c-gold-hot); }
+
+/* ── Needle ───────────────────────────────────────────────────────────── */
+
+.stopTipCore { stop-color: var(--c-gold-hot); stop-opacity: 0.7; }
+.stopTipEdge { stop-color: var(--c-gold-hot); stop-opacity: 0; }
+
+.hubRing {
+  fill: var(--c-raised);
+  stroke: var(--c-gold-dim);
+  stroke-width: 1.5px;
+}
+.hubCore {
+  fill: var(--c-void);
+  stroke: var(--c-gold-hot);
+  stroke-opacity: 0.7;
+  stroke-width: 1px;
+}
+/* Lit the same amber-hot as the active states elsewhere on the site. */
+.hubHalo { fill: color-mix(in oklab, var(--c-gold-hot) 28%, transparent); }
+.hubDot  { fill: var(--c-gold-hot); }
+
+/* ── Readout ──────────────────────────────────────────────────────────── */
+
+/* Sits in the open 90° at the bottom of the dial, clear of the needle's reach
+   at both ends of the sweep. */
+.readout {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--gauge) * 0.014);
+}
+
+.digits {
+  display: flex;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  font-size: calc(var(--gauge) * 0.16);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  /* Archivo ships tnum, so the three cells never change width mid-count. */
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+}
+
+/* Leading zeros stay on screen but dim, like unlit segments. */
+.ghost { opacity: 0.16; }
+
+.unit {
+  /* Letter-spacing trails the last glyph; matching padding centres it optically. */
+  padding-left: 0.4em;
+  font-size: var(--t-micro);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+/* Same recipe as .mark in topbar.module.css, so the wordmark reads as the same
+   one the cabin hands over to. */
+.brandMark {
+  margin: 0;
+  padding-left: 0.22em;
+  font-family: var(--font-archivo), sans-serif;
+  font-weight: 800;
+  font-size: var(--t-small);
+  letter-spacing: 0.22em;
+  color: var(--c-text);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

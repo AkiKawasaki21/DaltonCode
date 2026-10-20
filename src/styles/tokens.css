@@ -1,0 +1,66 @@
+/* Dalton Coding — design tokens
+ *
+ * Art direction: workshop-manual annotation over a night photograph.
+ *
+ * The single rule that holds this together: CYAN EXISTS ONLY IN THE PHOTO.
+ * The cabin's ambient lighting is the product being sold, so it earns the
+ * colour. UI chrome is warm — brand gold, warm off-white, brown-tinted black.
+ * The warm-on-cool tension is the whole point; tinting the chrome cyan too
+ * collapses it into generic neon-on-dark.
+ */
+
+:root {
+  /* Surfaces — tinted toward brown/gold, never blue, never pure black */
+  --c-void:       oklch(12% 0.008 70);
+  --c-bg:         oklch(16% 0.010 68);
+  --c-raised:     oklch(21% 0.012 66);
+  --c-hairline:   oklch(72% 0.020 70 / 0.22);
+  --c-hairline-s: oklch(72% 0.020 70 / 0.11);
+
+  /* Type — warm off-white, never pure */
+  --c-text:       oklch(96% 0.006 75);
+  --c-text-soft:  oklch(78% 0.012 72);
+  --c-text-faint: oklch(60% 0.014 70);
+
+  /* Brand gold is the only accent. Amber-hot for active states. */
+  --c-gold:       oklch(79% 0.136 78);
+  --c-gold-hot:   oklch(87% 0.148 84);
+  --c-gold-dim:   oklch(58% 0.090 76);
+
+  /* Type scale */
+  --t-pin:    0.625rem;
+  --t-micro:  clamp(0.6875rem, 0.66rem + 0.14vw, 0.75rem);
+  --t-small:  clamp(0.8125rem, 0.78rem + 0.17vw, 0.875rem);
+  --t-body:   clamp(0.9375rem, 0.90rem + 0.20vw, 1.0625rem);
+  --t-lead:   clamp(1.125rem, 1.02rem + 0.52vw, 1.5rem);
+  --t-title:  clamp(1.75rem, 1.30rem + 2.20vw, 3.25rem);
+  --t-hero:   clamp(2.25rem, 1.10rem + 4.20vw, 4.5rem);
+
+  /* Spacing — deliberately uneven, not one rhythm everywhere */
+  --s-gutter:  clamp(1rem, 0.80rem + 1.00vw, 2.25rem);
+  --s-section: clamp(3.5rem, 2.60rem + 4.40vw, 8rem);
+
+  /* Motion — exponential deceleration only, no bounce */
+  --d-tap:   110ms;
+  --d-fast:  220ms;
+  --d-mid:   440ms;
+  --d-slow:  880ms;
+  --e-out:   cubic-bezier(0.16, 1, 0.30, 1);
+  --e-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --r-chip: 3px;
+
+  /* Callout width is fixed so the leader line can terminate exactly at the
+     label's edge. Must match CALLOUT_W in CabinStage.tsx. */
+  --callout-w: 184px;
+
+  --z-plate: 0;
+  --z-lines: 10;
+  --z-pin: 20;
+  --z-chrome: 60;
+  --z-loader: 100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --d-tap: 1ms; --d-fast: 1ms; --d-mid: 1ms; --d-slow: 1ms; }
+}
