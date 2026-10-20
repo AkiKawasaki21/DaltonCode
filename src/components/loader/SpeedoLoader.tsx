@@ -30,7 +30,7 @@ const SWEEP_MS = 2200
 /** Rest on MAX_KMH before handing over, so the arrival reads as an arrival. */
 const HOLD_MS = 300
 /** Reduced motion: the finished dial is shown at once, then handed over. */
-const REDUCED_HOLD_MS = 150
+const REDUCED_HOLD_MS = 900
 
 /* ── Scale ──────────────────────────────────────────────────────────────── */
 
